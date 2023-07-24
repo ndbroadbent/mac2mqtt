@@ -23,6 +23,7 @@ type config struct {
 	Port     string `yaml:"mqtt_port"`
 	User     string `yaml:"mqtt_user"`
 	Password string `yaml:"mqtt_password"`
+	Hostname string `yaml:"hostname"`
 }
 
 func (c *config) getConfig() *config {
@@ -335,7 +336,12 @@ func main() {
 
 	var wg sync.WaitGroup
 
-	hostname = getHostname()
+	if c.Hostname != "" {
+		hostname = c.Hostname
+	} else {
+		hostname = getHostname()
+	}
+
 	mqttClient := getMQTTClient(c.Ip, c.Port, c.User, c.Password)
 
 	volumeTicker := time.NewTicker(2 * time.Second)
